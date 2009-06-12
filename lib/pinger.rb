@@ -5,10 +5,10 @@ class Pinger
   attr_reader :response, :time
   
   def initialize(options)
-    @url = options[:url]
+    @url = options["url"]
     @uri = URI.parse(@url)
-    @method = options[:method] || :get
-    @success_criteria = options[:success_criteria]
+    @method = options["method"] || "get"
+    @success_criteria = options["success_criteria"]
     ping
   end
   
@@ -39,16 +39,28 @@ class Pinger
     return false
   end
   
+  # this is where the magick of multiple acceptance criteria lies
+  # currently, you can ask for response code and message
+  # other ideas would be to be able to match on response body,
+  # max. answer time etc.
+  
   def check_for(name, criteria)
     case(name)
-    when :response_code, :message
+    when "response_code", "message"
       compare(send(name), criteria)
     else
       true
     end
   end
   
+  
+  # this method autmatically decides if the user wants to compare
+  # with == (if given a String) or with ~= if given a Regexp
+  
   def compare(value, criteria)
+    if criteria.is_a?(String) && matches = criteria.match(/^\/(.+)\/$/)
+      criteria = /#{matches[1]}/
+    end
     case(criteria)
     when Regexp
       return criteria.match(value)
@@ -68,6 +80,16 @@ class Pinger
   end
   def body
     @response.body
+  end
+
+  def to_hash
+    {
+      'url' => @url,
+      'method' => @method,
+      'success' => success?,
+      'time'  => @time,
+      'response_code' => response_code
+    }
   end
   
 end

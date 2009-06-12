@@ -1,9 +1,11 @@
 require 'test_helper'
+require 'pinger'
+
 
 class Ping < Test::Unit::TestCase
   
   def setup
-    @common_options = {:method => :get, :url => 'http://example.com/'}
+    @common_options = {'method' => 'get', "url" => 'http://example.com/'}
     @mock_response = mock('response')
     @mock_response.stubs(:code).returns('200')
     @mock_response.stubs(:message).returns('OK')
@@ -28,21 +30,21 @@ class Ping < Test::Unit::TestCase
   def test_success_for_response_code_criterium
     Net::HTTP.expects(:start).returns(@mock_response)
     @mock_response.expects(:code).returns('202')
-    p = Pinger.new(@common_options.merge({:success_criteria => {:response_code => 202 }}))
+    p = Pinger.new(@common_options.merge({"success_criteria" => {"response_code" => 202 }}))
     assert p.success?
   end
 
   def test_success_for_message_criterium
     Net::HTTP.expects(:start).returns(@mock_response)
     @mock_response.expects(:message).returns('ORLY?')
-    p = Pinger.new(@common_options.merge({:success_criteria => {:message => 'ORLY?' }}))
+    p = Pinger.new(@common_options.merge({"success_criteria" => {"message" => 'ORLY?' }}))
     assert p.success?
   end
 
   def test_success_for_message_criterium_with_regexp
     Net::HTTP.expects(:start).returns(@mock_response)
     @mock_response.expects(:message).returns('ORLY?WTF')
-    p = Pinger.new(@common_options.merge({:success_criteria => {:message => /ORLY/ }}))
+    p = Pinger.new(@common_options.merge({"success_criteria" => {"message" => '/ORLY/' }}))
     assert p.success?
   end
 
