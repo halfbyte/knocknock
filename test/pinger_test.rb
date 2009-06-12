@@ -1,7 +1,4 @@
-require '../lib/pinger'
-require 'rubygems'
-require 'test/unit'
-require 'mocha'
+require 'test_helper'
 
 class Ping < Test::Unit::TestCase
   
@@ -59,7 +56,6 @@ class Ping < Test::Unit::TestCase
     p = Pinger.new(@common_options)
     assert_equal 'OK', p.message    
   end
-
 
   def test_should_return_response_code
     Net::HTTP.expects(:start).returns(@mock_response)
