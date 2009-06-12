@@ -10,12 +10,7 @@ class Ping < Test::Unit::TestCase
     @mock_response.stubs(:body).returns('yaddayadda')
     @mock_response.stubs(:is_a?).returns(true)
   end
-      
-  def test_ping_should_send_http_process
-    Net::HTTP.any_instance.expects(:get).with('/')
-    p = Pinger.new(@common_options)
-  end
-  
+        
   def test_success_should_return_true_if_response_is_successful_and_no_more_criteria_given
     Net::HTTP.expects(:start).returns(@mock_response)
     @mock_response.expects(:is_a?).with(Net::HTTPSuccess).returns(true)
