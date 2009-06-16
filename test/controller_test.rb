@@ -34,8 +34,8 @@ class ControllerTest < Test::Unit::TestCase
     Controller.any_instance.stubs(:run)
     Controller.any_instance.stubs(:open).returns(File.open(File.join(File.dirname(__FILE__), 'fixtures', 'example_list.json')))
     c = Controller.new('http://example.com/', 200)
-    c.expects(:post_results).with('meh')
-    Pinger.expects(:new).once.returns('meh')
+    c.expects(:post_results).with([{}])
+    Pinger.expects(:new).once.returns({})
     c.process
   end
   
@@ -43,8 +43,8 @@ class ControllerTest < Test::Unit::TestCase
     Controller.any_instance.stubs(:run)
     Controller.any_instance.stubs(:open).returns(File.open(File.join(File.dirname(__FILE__), 'fixtures', 'example_list.json')))
     c = Controller.new('http://example.com/', 200)
-    c.stubs(:post_results)    
-    Pinger.expects(:new).once.returns('')
+    #c.stubs(:post_results)    
+    Pinger.expects(:new).once.returns({})
     c.process
   end
   

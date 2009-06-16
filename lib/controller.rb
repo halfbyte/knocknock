@@ -17,13 +17,15 @@ class Controller
   end
 
   def process
-    parse(open(@endpoint)).each do |entry|
-      post_results(Pinger.new(entry))
+    results = parse(open(@endpoint)).map do |entry|
+      puts entry
+      Pinger.new(entry).to_hash
     end
+    post_results(results)
   end
 
   def post_results(pinger)
-    answer = JSON.generate(pinger.to_hash.merge('ticket_id' => @current_ticket_id))
+    answer = JSON.generate("results" => pinger, 'ticket_id' => @current_ticket_id)
   end
   
   def parse(file)
